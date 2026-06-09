@@ -1,6 +1,6 @@
-from checks import check_firewall
+from checks import check_sudo_users
 from reporter import print_reports
 
-results = [check_firewall()]
+results = [check_sudo_users()]
 
 print_reports(results)

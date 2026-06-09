@@ -63,3 +63,29 @@ def check_firewall():
         return {"severity": "INFO", "message": "Firewall active"}
     else:
         return {"severity": "MEDIUM", "message": "Firewall inactive"}
+
+
+def check_sudo_users():
+    result = subprocess.run(
+        ["getent", "group", "wheel"], capture_output=True, text=True
+    )
+
+    if result.returncode != 0:
+        return {"severity": "INFO", "message": "no wheel group found!"}
+    group_info = result.stdout.strip()
+
+    if not group_info:
+        return {"severity": "INFO", "message": "no wheel group found!"}
+
+    user_info = group_info.split(":")[-1]
+
+    if not user_info:
+        return {"severity": "INFO", "message": "0 sudo users found"}
+
+    users = user_info.split(",")
+    user_count = len(users)
+
+    return {
+        "severity": "INFO",
+        "message": f"{user_count} sudo users found: {', '.join(users)}",
+    }
