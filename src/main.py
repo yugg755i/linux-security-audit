@@ -1,6 +1,6 @@
-from checks import check_sudo_users
+from checks import check_world_writable_files
 from reporter import print_reports
 
-results = [check_sudo_users()]
+results = [check_world_writable_files()]
 
 print_reports(results)

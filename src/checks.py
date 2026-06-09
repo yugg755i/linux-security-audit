@@ -11,18 +11,18 @@ def check_ssh_root_login():
                 if not line or line.startswith("#"):
                     continue
                 if line.startswith("PermitRootLogin yes"):
-                    return {"severity": "HIGH", "message": "root ssh login enabled"}
+                    return {"severity": "HIGH", "message": "Root SSH login enabled"}
                 elif line.startswith("PermitRootLogin no"):
-                    return {"severity": "INFO", "message": "root ssh login disabled"}
+                    return {"severity": "INFO", "message": "Root SSH login disabled"}
                 elif line.startswith("PermitRootLogin prohibit-password"):
                     return {
                         "severity": "INFO",
-                        "message": "root ssh login prohibit-password",
+                        "message": "Root SSH login prohibit-password",
                     }
 
-        return {"severity": "INFO", "message": "PermitRootLogin setting not found!"}
+        return {"severity": "INFO", "message": "PermitRootLogin setting not found"}
     else:
-        return {"severity": "INFO", "message": "ssh config not found!"}
+        return {"severity": "INFO", "message": "SSH config not found"}
 
 
 def check_pass_auth():
@@ -46,10 +46,10 @@ def check_pass_auth():
 
         return {
             "severity": "INFO",
-            "message": "PasswordAuthentication setting not found!",
+            "message": "PasswordAuthentication setting not found",
         }
     else:
-        return {"severity": "INFO", "message": "ssh config not found!"}
+        return {"severity": "INFO", "message": "ssh config not found"}
 
 
 def check_firewall():
@@ -71,11 +71,11 @@ def check_sudo_users():
     )
 
     if result.returncode != 0:
-        return {"severity": "INFO", "message": "no wheel group found!"}
+        return {"severity": "INFO", "message": "no wheel group found"}
     group_info = result.stdout.strip()
 
     if not group_info:
-        return {"severity": "INFO", "message": "no wheel group found!"}
+        return {"severity": "INFO", "message": "no wheel group found"}
 
     user_info = group_info.split(":")[-1]
 
@@ -89,3 +89,16 @@ def check_sudo_users():
         "severity": "INFO",
         "message": f"{user_count} sudo users found: {', '.join(users)}",
     }
+
+
+def check_world_writable_files():
+    result = subprocess.run(
+        ["find", "/", "-type", "f", "-perm", "-002"], capture_output=True, text=True
+    )
+    files = result.stdout.strip().splitlines()
+    count = len(files)
+    if count == 0:
+        severity = "INFO"
+    else:
+        severity = "MEDIUM"
+    return {"severity": severity, "message": f"{count} world-writable files found"}
