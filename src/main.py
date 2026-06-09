@@ -1,6 +1,6 @@
-from checks import check_ssh_root_login
+from checks import check_firewall
 from reporter import print_reports
 
-results = [check_ssh_root_login()]
+results = [check_firewall()]
 
 print_reports(results)

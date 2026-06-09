@@ -1,3 +1,4 @@
+import subprocess
 from pathlib import Path
 
 
@@ -49,3 +50,16 @@ def check_pass_auth():
         }
     else:
         return {"severity": "INFO", "message": "ssh config not found!"}
+
+
+def check_firewall():
+    result = subprocess.run(
+        ["systemctl", "is-active", "ufw"], capture_output=True, text=True
+    )
+
+    status = result.stdout.strip()
+
+    if status == "active":
+        return {"severity": "INFO", "message": "Firewall active"}
+    else:
+        return {"severity": "MEDIUM", "message": "Firewall inactive"}
