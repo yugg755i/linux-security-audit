@@ -53,16 +53,13 @@ def check_pass_auth():
 
 
 def check_firewall():
-    result = subprocess.run(
-        ["systemctl", "is-active", "ufw"], capture_output=True, text=True
-    )
-
-    status = result.stdout.strip()
-
-    if status == "active":
-        return {"severity": "INFO", "message": "Firewall active"}
-    else:
-        return {"severity": "MEDIUM", "message": "Firewall inactive"}
+    for service in ["ufw", "firewalld", "nftables"]:
+        result = subprocess.run(
+            ["systemctl", "is-active", service], capture_output=True, text=True
+        )
+        if result.stdout.strip() == "active":
+            return {"severity": "INFO", "message": f"Firewall active ({service})"}
+    return {"severity": "MEDIUM", "message": "Firewall inactive"}
 
 
 def check_sudo_users():
