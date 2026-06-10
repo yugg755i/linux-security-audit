@@ -102,3 +102,24 @@ def check_world_writable_files():
     else:
         severity = "MEDIUM"
     return {"severity": severity, "message": f"{count} world-writable files found"}
+
+
+def check_open_ports():
+    result = subprocess.run(["ss", "-tuln"], capture_output=True, text=True)
+
+    ports = set()
+
+    for line in result.stdout.splitlines()[1:]:
+        parts = line.split()
+
+        if len(parts) < 5:
+            continue
+
+        address = parts[4]
+        port = address.split(":")[-1]
+        ports.add(port)
+
+    return {
+        "severity": "INFO",
+        "message": f"{len(ports)} open ports: {','.join(sorted(ports, key=int))}",
+    }

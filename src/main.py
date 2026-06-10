@@ -3,6 +3,7 @@ from pathlib import Path
 
 from checks import (
     check_firewall,
+    check_open_ports,
     check_pass_auth,
     check_ssh_root_login,
     check_sudo_users,
@@ -30,6 +31,7 @@ def main():
         check_firewall(),
         check_sudo_users(),
         check_world_writable_files(),
+        check_open_ports(),
     ]
     if args.save_txt:
         save_reports_txt(results, "reports/report.txt")
