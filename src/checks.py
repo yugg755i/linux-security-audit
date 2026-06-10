@@ -93,7 +93,28 @@ def check_sudo_users():
 
 def check_world_writable_files():
     result = subprocess.run(
-        ["find", "/", "-type", "f", "-perm", "-002"], capture_output=True, text=True
+        [
+            "find",
+            "/",
+            "-type",
+            "f",
+            "-perm",
+            "-002",
+            "-not",
+            "-path",
+            "/proc/*",
+            "-not",
+            "-path",
+            "/sys/*",
+            "-not",
+            "-path",
+            "/dev/*",
+            "-not",
+            "-path",
+            "/run/*",
+        ],
+        capture_output=True,
+        text=True,
     )
     files = result.stdout.strip().splitlines()
     count = len(files)
@@ -127,7 +148,27 @@ def check_open_ports():
 
 def check_executable_files():
     result = subprocess.run(
-        ["find", "/", "-type", "f", "-executable"], capture_output=True, text=True
+        [
+            "find",
+            "/",
+            "-type",
+            "f",
+            "-executable",
+            "-not",
+            "-path",
+            "/proc/*",
+            "-not",
+            "-path",
+            "/sys/*",
+            "-not",
+            "-path",
+            "/dev/*",
+            "-not",
+            "-path",
+            "/run/*",
+        ],
+        capture_output=True,
+        text=True,
     )
     files = result.stdout.splitlines()
     count = len(files)
@@ -138,13 +179,54 @@ def check_executable_files():
 def check_dir(path):
 
     result_write = subprocess.run(
-        ["find", path, "-type", "f", "-perm", "-002"], capture_output=True, text=True
+        [
+            "find",
+            path,
+            "-type",
+            "f",
+            "-perm",
+            "-002",
+            "-not",
+            "-path",
+            "/proc/*",
+            "-not",
+            "-path",
+            "/sys/*",
+            "-not",
+            "-path",
+            "/dev/*",
+            "-not",
+            "-path",
+            "/run/*",
+        ],
+        capture_output=True,
+        text=True,
     )
     write_files = result_write.stdout.strip().splitlines()
     write_count = len(write_files)
 
     result_exe = subprocess.run(
-        ["find", path, "-type", "f", "-executable"], capture_output=True, text=True
+        [
+            "find",
+            path,
+            "-type",
+            "f",
+            "-executable",
+            "-not",
+            "-path",
+            "/proc/*",
+            "-not",
+            "-path",
+            "/sys/*",
+            "-not",
+            "-path",
+            "/dev/*",
+            "-not",
+            "-path",
+            "/run/*",
+        ],
+        capture_output=True,
+        text=True,
     )
     exe_files = result_exe.stdout.splitlines()
     exe_count = len(exe_files)
