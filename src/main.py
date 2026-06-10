@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 
 from checks import (
+    check_executable_files,
     check_firewall,
     check_open_ports,
     check_pass_auth,
@@ -9,7 +10,12 @@ from checks import (
     check_sudo_users,
     check_world_writable_files,
 )
-from reporter import print_reports, save_reports_json, save_reports_txt
+from reporter import (
+    print_dir_report,
+    print_reports,
+    save_reports_json,
+    save_reports_txt,
+)
 
 
 def main():
@@ -22,6 +28,7 @@ def main():
     parser.add_argument(
         "--save-json", action="store_true", help="save report to JSON file"
     )
+    parser.add_argument("--path", type=str, help="directory to audit")
 
     args = parser.parse_args()
 
@@ -31,14 +38,19 @@ def main():
         check_firewall(),
         check_sudo_users(),
         check_world_writable_files(),
+        check_executable_files(),
         check_open_ports(),
     ]
+
+    print_reports(results)
+
     if args.save_txt:
         save_reports_txt(results, "reports/report.txt")
     if args.save_json:
         save_reports_json(results, "reports/report.json")
-
-    print_reports(results)
+    if args.path:
+        path = Path(args.path).expanduser()
+        print_dir_report(path)
 
 
 if __name__ == "__main__":
