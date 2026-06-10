@@ -1,12 +1,8 @@
 # Linux Audit
 
-A Linux security auditing tool written in Python.
+A Python-based Linux security auditing tool that scans for common misconfigurations and generates security reports.
 
-## Overview
-
-Linux Audit scans a Linux system for common security issues and generates a security report.
-
-The goal of this project is to provide a lightweight auditing tool for learning Linux security, Python automation, and basic security assessment techniques.
+Built to practice Linux security concepts, Python automation, and basic security assessment techniques.
 
 ## Features
 
@@ -15,30 +11,31 @@ The goal of this project is to provide a lightweight auditing tool for learning 
 * Check firewall status
 * List sudo users
 * Detect world-writable files
+* Detect executable files
+* List open ports
+* Audit a custom directory for world-writable and executable files
 * Generate terminal reports
-* Export reports to TXT format
-* Export reports to JSON format
+* Export reports to TXT and JSON format
 
 ## Project Structure
 
 ```text
 linux-audit/
 ├── src/
-│   ├── checks.py       # security checks (SSH, firewall, sudo, world-writable)
+│   ├── checks.py       # security checks (SSH, firewall, sudo, ports, files)
 │   ├── reporter.py     # report generation and TXT/JSON export
 │   └── main.py         # CLI entry point
 ├── reports/            # generated audit reports
 ├── README.md
 └── requirements.txt
 ```
+
 ## Installation
 
 ```bash
 git clone https://github.com/yugg755i/linux-audit.git
-
 cd linux-audit
-
-python src/main.py
+pip install -r requirements.txt
 ```
 
 ## Requirements
@@ -67,7 +64,13 @@ Save report as JSON:
 python src/main.py --save-json
 ```
 
-Save both:
+Audit a specific directory:
+
+```bash
+python src/main.py --path /var/www
+```
+
+Save both formats:
 
 ```bash
 python src/main.py --save-txt --save-json
@@ -79,9 +82,18 @@ python src/main.py --save-txt --save-json
 [HIGH] Root SSH login enabled
 [MEDIUM] Password authentication enabled
 [INFO] Firewall active
-[INFO] 2 sudo users found: admin, user
+[INFO] 1 sudo users found: admin
 [MEDIUM] 5 world-writable files found
+[INFO] 1042 executable files found
+[INFO] 6 open ports: 22,80,443,3306,5432,8080
 ```
+
+Findings are categorized as HIGH, MEDIUM, or INFO based on severity.
+
+## Stack
+
+- Python 3.10+
+- Standard library only (no external dependencies)
 
 ## Screenshots
 
@@ -93,6 +105,3 @@ python src/main.py --save-txt --save-json
 
 ![Audit Output](screenshots/audit_output.png)
 
-## Stack
-- Python 3.10+
-- Standard library only (no external dependencies)
