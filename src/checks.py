@@ -123,3 +123,37 @@ def check_open_ports():
         "severity": "INFO",
         "message": f"{len(ports)} open ports: {','.join(sorted(ports, key=int))}",
     }
+
+
+def check_executable_files():
+    result = subprocess.run(
+        ["find", "/", "-type", "f", "-executable"], capture_output=True, text=True
+    )
+    files = result.stdout.splitlines()
+    count = len(files)
+
+    return {"severity": "INFO", "message": f"{count} world-writable files found"}
+
+
+def check_dir(path):
+
+    result_write = subprocess.run(
+        ["find", path, "-type", "f", "-perm", "-002"], capture_output=True, text=True
+    )
+    write_files = result_write.stdout.strip().splitlines()
+    write_count = len(write_files)
+
+    result_exe = subprocess.run(
+        ["find", path, "-type", "f", "-executable"], capture_output=True, text=True
+    )
+    exe_files = result_exe.stdout.splitlines()
+    exe_count = len(exe_files)
+
+    return {
+        "severity": "INFO",
+        "path": path,
+        "world_writable_count": write_count,
+        "world_writable_files": write_files,
+        "executable_count": exe_count,
+        "executable_files": exe_files,
+    }
