@@ -1,4 +1,4 @@
-# Linux Audit
+# Linux Security Audit
 
 A Python-based Linux security auditing tool that scans for common misconfigurations and generates security reports.
 
@@ -20,22 +20,20 @@ Built to practice Linux security concepts, Python automation, and basic security
 ## Project Structure
 
 ```text
-linux-audit/
+linux-security-audit/
 ├── src/
 │   ├── checks.py       # security checks (SSH, firewall, sudo, ports, files)
 │   ├── reporter.py     # report generation and TXT/JSON export
 │   └── main.py         # CLI entry point
 ├── reports/            # generated audit reports
-├── README.md
-└── requirements.txt
+└── README.md
 ```
 
 ## Installation
 
 ```bash
-git clone https://github.com/yugg755i/linux-audit.git
-cd linux-audit
-pip install -r requirements.txt
+git clone https://github.com/yugg755i/linux-security-audit.git
+cd linux-security-audit
 ```
 
 ## Requirements
