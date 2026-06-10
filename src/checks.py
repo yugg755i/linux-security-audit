@@ -132,7 +132,7 @@ def check_executable_files():
     files = result.stdout.splitlines()
     count = len(files)
 
-    return {"severity": "INFO", "message": f"{count} world-writable files found"}
+    return {"severity": "INFO", "message": f"{count} executable files found"}
 
 
 def check_dir(path):
